@@ -1,0 +1,136 @@
+{
+  "version": 1,
+  "projects": {
+    "marbles-testing": {
+      "projectType": "application",
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/marbles-testing",
+      "sourceRoot": "apps/marbles-testing/src",
+      "prefix": "marbles-testing",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/marbles-testing",
+            "index": "apps/marbles-testing/src/index.html",
+            "main": "apps/marbles-testing/src/main.ts",
+            "polyfills": "apps/marbles-testing/src/polyfills.ts",
+            "tsConfig": "apps/marbles-testing/tsconfig.app.json",
+            "aot": false,
+            "assets": [
+              "apps/marbles-testing/src/favicon.ico",
+              "apps/marbles-testing/src/assets"
+            ],
+            "styles": ["apps/marbles-testing/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/marbles-testing/src/environments/environment.ts",
+                  "with": "apps/marbles-testing/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "marbles-testing:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "marbles-testing:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "marbles-testing:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/marbles-testing/tsconfig.app.json",
+              "apps/marbles-testing/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/marbles-testing/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/marbles-testing/jest.config.js",
+            "tsConfig": "apps/marbles-testing/tsconfig.spec.json",
+            "setupFile": "apps/marbles-testing/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "marbles-testing-e2e": {
+      "root": "apps/marbles-testing-e2e",
+      "sourceRoot": "apps/marbles-testing-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/marbles-testing-e2e/cypress.json",
+            "tsConfig": "apps/marbles-testing-e2e/tsconfig.e2e.json",
+            "devServerTarget": "marbles-testing:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "marbles-testing:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["apps/marbles-testing-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/marbles-testing-e2e/**"]
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "defaultCollection": "@nrwl/angular"
+  },
+  "schematics": {
+    "@nrwl/angular:application": {
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nrwl/angular:library": {
+      "unitTestRunner": "jest"
+    }
+  },
+  "defaultProject": "marbles-testing"
+}
