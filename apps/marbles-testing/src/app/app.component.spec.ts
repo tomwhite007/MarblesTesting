@@ -1,10 +1,27 @@
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { DummyService } from './services/dummy.service';
+import { Store } from '@ngrx/store';
+
+export const createSpyObj = (
+  baseName: string,
+  methodNames: string[] | (string | number)[]
+): { [key: string]: any } => {
+  const obj: any = {};
+
+  for (let i = 0; i < methodNames.length; i++) {
+    obj[methodNames[i]] = jest.fn();
+  }
+
+  return obj;
+};
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
+    const storeSpy = createSpyObj('Store', ['select', 'dispatch']);
     TestBed.configureTestingModule({
-      declarations: [AppComponent]
+      declarations: [AppComponent],
+      providers: [DummyService, { provide: Store, useValue: storeSpy }]
     }).compileComponents();
   }));
 
