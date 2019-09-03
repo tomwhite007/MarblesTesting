@@ -1,5 +1,4 @@
 import { Action } from '@ngrx/store';
-import { Entity } from './dummy-state.reducer';
 
 export enum DummyStateActionTypes {
   LoadDummyState = '[DummyState] Load DummyState',
@@ -18,7 +17,7 @@ export class DummyStateLoadError implements Action {
 
 export class DummyStateLoaded implements Action {
   readonly type = DummyStateActionTypes.DummyStateLoaded;
-  constructor(public payload: Entity[]) {}
+  constructor(public payload: string[]) {}
 }
 
 export type DummyStateAction =

@@ -20,8 +20,12 @@ import { FakeRestService } from '../services/fake-rest.service';
 describe('DummyStateEffects', () => {
   let actions$: Observable<Action>;
   let effects: DummyStateEffects;
+  const dummyApiError = new Error('Oops! Api request failed');
   const apiSpy = {
-    getDummyData: jest.fn(() => of(['Mocked']))
+    getDummyData: jest
+      .fn()
+      .mockImplementationOnce(() => of(['Mocked']))
+      .mockImplementationOnce(() => throwError(dummyApiError))
   };
   const testScheduler = new TestScheduler((actual, expected) => {
     // asserting the two objects are equal
@@ -47,7 +51,7 @@ describe('DummyStateEffects', () => {
   });
 
   it('should trigger loaded action', () => {
-    testScheduler.run(({ cold, hot, expectObservable, flush }) => {
+    testScheduler.run(({ hot, expectObservable }) => {
       actions$ = hot('-a-|', { a: new LoadDummyState() });
 
       expectObservable(effects.loadDummyState$).toBe('-a-|', {
@@ -56,17 +60,13 @@ describe('DummyStateEffects', () => {
     });
   });
 
-  // it('should trigger load error action', () => {
-  //   testScheduler.run(({ cold, hot, expectObservable, flush }) => {
-  //     const dummyApiError = new Error('Oops! Api request failed');
-  //     apiSpy.getDummyData.mockImplementation(() => throwError(dummyApiError));
+  it('should trigger load error action', () => {
+    testScheduler.run(({ hot, expectObservable }) => {
+      actions$ = hot('-a-|', { a: new LoadDummyState() });
 
-  //     actions$ = hot('-a-|', { a: new LoadDummyState() });
-
-  //     expectObservable(effects.loadDummyState$).toBe('----a-|', {
-  //       a: new DummyStateLoadError(dummyApiError)
-  //     });
-  //     // effects.loadDummyState$.subscribe(res => console.log(res));
-  //   });
-  // });
+      expectObservable(effects.loadDummyState$).toBe('---(a|)', {
+        a: new DummyStateLoadError(dummyApiError)
+      });
+    });
+  });
 });

@@ -1,15 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Effect, Actions, ofType } from '@ngrx/effects';
-import { DataPersistence } from '@nrwl/angular';
-
-import { DummyStatePartialState } from './dummy-state.reducer';
 import {
-  LoadDummyState,
   DummyStateLoaded,
   DummyStateLoadError,
   DummyStateActionTypes,
-  DummyStateAction,
-  fromDummyStateActions
+  DummyStateAction
 } from './dummy-state.actions';
 import { Observable, of } from 'rxjs';
 import { Action } from '@ngrx/store';
