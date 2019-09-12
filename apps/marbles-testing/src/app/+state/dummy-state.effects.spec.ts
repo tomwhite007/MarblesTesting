@@ -21,17 +21,14 @@ describe('DummyStateEffects', () => {
   let actions$: Observable<Action>;
   let effects: DummyStateEffects;
   const dummyApiError = new Error('Oops! Api request failed');
+
   const apiSpy = {
     getDummyData: jest
       .fn()
       .mockImplementationOnce(() => of(['Mocked']))
-      .mockImplementationOnce(() => throwError(dummyApiError))
+      .mockImplementationOnce(() => throwError(dummyApiError)),
+    dummyTest: jest.fn(() => 1234)
   };
-  const testScheduler = new TestScheduler((actual, expected) => {
-    // asserting the two objects are equal
-    // required for all Marbles assertions to be asserted by Jest or Jasmine
-    expect(actual).toEqual(expected);
-  });
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -51,6 +48,12 @@ describe('DummyStateEffects', () => {
   });
 
   it('should trigger loaded action', () => {
+    const testScheduler = new TestScheduler((actual, expected) => {
+      // asserting the two objects are equal
+      // required for all Marbles assertions to be asserted by Jest or Jasmine
+      expect(actual).toEqual(expected);
+    });
+
     testScheduler.run(({ hot, expectObservable }) => {
       actions$ = hot('-a-|', { a: new LoadDummyState() });
 
@@ -61,12 +64,23 @@ describe('DummyStateEffects', () => {
   });
 
   it('should trigger load error action', () => {
+    const testScheduler = new TestScheduler((actual, expected) => {
+      // asserting the two objects are equal
+      // required for all Marbles assertions to be asserted by Jest or Jasmine
+      expect(actual).toEqual(expected);
+    });
+
     testScheduler.run(({ hot, expectObservable }) => {
       actions$ = hot('-a-|', { a: new LoadDummyState() });
 
-      expectObservable(effects.loadDummyState$).toBe('---(a|)', {
+      expectObservable(effects.loadDummyState$).toBe('(a|)', {
         a: new DummyStateLoadError(dummyApiError)
       });
     });
+  });
+
+  it('should prove Jest mockImplementationOnce works in real time', () => {
+    apiSpy.dummyTest.mockImplementationOnce(() => 5555);
+    expect(apiSpy.dummyTest()).toEqual(5555);
   });
 });
