@@ -11,6 +11,8 @@ import { DummyStateEffects } from './+state/dummy-state.effects';
   declarations: [AppComponent],
   imports: [
     BrowserModule,
+    StoreModule.forRoot({}),
+    EffectsModule.forRoot([]),
     StoreModule.forFeature(
       fromDummyState.DUMMYSTATE_FEATURE_KEY,
       fromDummyState.reducer
