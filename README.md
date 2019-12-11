@@ -6,7 +6,7 @@ See [dummy-state.effects.spec.ts](https://github.com/tomwhite007/MarblesTestingJ
 
 the `+state` folder was scaffolded by Nrwl [Nx](https://nx.dev) schematic:
 
-```node
+```
 ng g @nrwl/angular:ngrx <featurename> --module=<path-to-module> --defaults [options]
 ```
 
