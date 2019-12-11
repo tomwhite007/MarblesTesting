@@ -14,7 +14,7 @@ ng g @nrwl/angular:ngrx <featurename> --module=<path-to-module> --defaults [opti
 
 ## dummy-state.effects
 
-Originally, I built this demo with an NgRx Effect that used the operator `withLatestFrom` to get a value from the Store. It turns out this causes problems when trying to mock the input to it after the Effect has been instantiated. See [withLastestFrom-mocking-issue demo](https://github.com/tomwhite007/withLastestFrom-mocking-issue) or [rxjs/issues/5159](https://github.com/ReactiveX/rxjs/issues/5159)
+Originally, I built this demo with an NgRx Effect that used the operator `withLatestFrom` to get a value from an api. It turns out this causes problems when trying to mock the input to it after the Effect has been instantiated. See [withLastestFrom-mocking-issue demo](https://github.com/tomwhite007/withLastestFrom-mocking-issue) or [rxjs/issues/5159](https://github.com/ReactiveX/rxjs/issues/5159)
 
 I have since refactored to to use `switchMap` to avoid this issue whilst demonstrating current Angular unit testing best practice.
 
