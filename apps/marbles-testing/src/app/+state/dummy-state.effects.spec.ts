@@ -23,11 +23,7 @@ describe('DummyStateEffects', () => {
   const dummyApiError = new Error('Oops! Api request failed');
 
   const apiSpy = {
-    getDummyData: jest
-      .fn()
-      .mockImplementationOnce(() => of(['Mocked']))
-      .mockImplementationOnce(() => throwError(dummyApiError)),
-    dummyTest: jest.fn(() => 1234)
+    getDummyData: jest.fn()
   };
 
   beforeEach(() => {
@@ -54,7 +50,9 @@ describe('DummyStateEffects', () => {
       expect(actual).toEqual(expected);
     });
 
-    testScheduler.run(({ hot, expectObservable }) => {
+    testScheduler.run(({ hot, cold, expectObservable }) => {
+      apiSpy.getDummyData.mockReturnValue(cold('(a|)', { a: ['Mocked'] }));
+
       actions$ = hot('-a-|', { a: new LoadDummyState() });
 
       expectObservable(effects.loadDummyState$).toBe('-a-|', {
@@ -70,17 +68,14 @@ describe('DummyStateEffects', () => {
       expect(actual).toEqual(expected);
     });
 
-    testScheduler.run(({ hot, expectObservable }) => {
+    testScheduler.run(({ hot, cold, expectObservable }) => {
+      apiSpy.getDummyData.mockReturnValue(cold('#', null, dummyApiError));
+
       actions$ = hot('-a-|', { a: new LoadDummyState() });
 
-      expectObservable(effects.loadDummyState$).toBe('(a|)', {
+      expectObservable(effects.loadDummyState$).toBe('-(a|)', {
         a: new DummyStateLoadError(dummyApiError)
       });
     });
-  });
-
-  it('should prove Jest mockImplementationOnce works in real time', () => {
-    apiSpy.dummyTest.mockImplementationOnce(() => 5555);
-    expect(apiSpy.dummyTest()).toEqual(5555);
   });
 });
